@@ -33,6 +33,6 @@ public class Module {
     }
 
     public List<Quiz> getQuizzes() {
-        return quizzes;
+        return new ArrayList<>(quizzes);
     }
 }

@@ -8,7 +8,7 @@ public class Certificate {
     private Student student;
     private LocalDate issueDate;
 
-    public Certificate(int id, Course course, Student student, LocalDate issueDate) {
+    public Certificate(int id, Course course, Student student) {
         this.id = id;
         this.course = course;
         this.student = student;

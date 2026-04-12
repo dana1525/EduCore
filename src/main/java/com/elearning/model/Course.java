@@ -39,7 +39,7 @@ public class Course {
     }
 
     public List<Module> getModule() {
-        return modules;
+        return new ArrayList<>(modules);
     }
 
     @Override

@@ -27,6 +27,6 @@ public class Quiz {
     }
 
     public List<Question> getQuestions() {
-        return questions;
+        return new ArrayList<>(questions);
     }
 }

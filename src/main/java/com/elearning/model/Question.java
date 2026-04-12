@@ -1,5 +1,6 @@
 package com.elearning.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Question {
@@ -32,6 +33,6 @@ public class Question {
     }
 
     public List<String> getOptions() {
-        return options;
+        return new ArrayList<>(options);
     }
 }
