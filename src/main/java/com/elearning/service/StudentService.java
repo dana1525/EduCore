@@ -10,6 +10,11 @@ public class StudentService {
     private int nextIdx;
 
     public Student registerStudent(String name, String email, String password) {
+        for (Student s : students) {
+            if (s.getEmail().equals(email)) {
+                throw new IllegalArgumentException("Student already exists: " + email);
+            }
+        }
         Student student = new Student(++nextIdx, name, email, password);
         students.add(student);
         System.out.println("Student registered: " + student.getName());

@@ -7,7 +7,7 @@ import com.elearning.service.*;
 import java.util.List;
 
 public class Main {
-    static void main() {
+    public static void main(String[] args) {
         CourseService courseService = new CourseService();
         EnrollmentService enrollmentService = new EnrollmentService();
         QuizService quizService = new QuizService();
@@ -30,16 +30,23 @@ public class Main {
             System.out.println("Error: " + e.getMessage());
         }
 
-        Student student1 = studentService.registerStudent("Andreea", "andreea@gmail.com", "pass1");
-        Student student2 = studentService.registerStudent("Mara", "mara@gmail.com", "pass2");
-        Student student3 = studentService.registerStudent("Andrei", "andrei@gmail.com", "pass3");
+        Student student1 = null, student2 = null,
+                student3 = null, student4 = null;
+
+        try {
+            student1 = studentService.registerStudent("Andreea", "andreea@gmail.com", "pass1");
+            student2 = studentService.registerStudent("Mara", "mara@gmail.com", "pass2");
+            student3 = studentService.registerStudent("Andrei", "andrei@gmail.com", "pass3");
+            student4 = studentService.registerStudent("Ana", "andrei@gmail.com", "pass4");
+        } catch (IllegalArgumentException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
 
         System.out.println("--- List all students registered ---");
         studentService.listAllStudents();
 
         enrollmentService.enrollStudent(student1, course1);
         enrollmentService.enrollStudent(student2, course2);
-//        enrollmentService.enrollStudent(student2, course2);
 
         enrollmentService.enrollStudent(student3, course1);
 
