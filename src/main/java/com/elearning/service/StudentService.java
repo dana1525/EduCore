@@ -1,0 +1,33 @@
+package com.elearning.service;
+
+import com.elearning.model.Student;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class StudentService {
+    private List<Student> students = new ArrayList<>();
+    private int nextIdx;
+
+    public Student registerStudent(String name, String email, String password) {
+        Student student = new Student(++nextIdx, name, email, password);
+        students.add(student);
+        System.out.println("Student registered: " + student.getName());
+        return student;
+    }
+
+    public void updateProgress(Student student, double progress) {
+        student.setProgress(progress);
+        System.out.println("Progress updated: " + student.getName() + " -> " + student.getProgress() + " %");
+    }
+
+    public void listAllStudents() {
+        if (students.isEmpty()) {
+            System.out.println("No students registered");
+            return;
+        }
+        for (Student s : students) {
+            System.out.println(s);
+        }
+    }
+}

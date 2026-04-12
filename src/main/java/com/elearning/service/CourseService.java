@@ -5,11 +5,11 @@ package com.elearning.service;
 
 import com.elearning.model.Course;
 
-import java.lang.foreign.StructLayout;
 import java.util.TreeMap;
 
 public class CourseService {
     // Existing Comparator in Java
+    // Fast search by key and sorted order
     private TreeMap<String, Course> courses = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
     public void addCourse(Course course) {
@@ -18,10 +18,6 @@ public class CourseService {
         }
         courses.put(course.getTitle(), course);
     }
-
-//    public Course findByTitle(String title) {
-//        return courses.get(title);
-//    }
 
     public void listAllCourses() {
         for (Course course : courses.values()) {
