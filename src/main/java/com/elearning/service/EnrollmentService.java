@@ -30,4 +30,35 @@ public class EnrollmentService {
             }
         }
     }
+
+    public void cancelEnrollment(Student student, Course course) {
+        for (Enrollment e : enrollments) {
+            if (e.getStudent().getId() == student.getId()
+                    && e.getCourse().getId() == course.getId()) {
+                if (e.getStatus() == Enrollment.Status.COMPLETED) {
+                    throw new IllegalStateException("Cannot cancel a completed enrollment.");
+                }
+                e.setStatus(Enrollment.Status.CANCELLED);
+                System.out.println(student.getName() + " cancelled enrollment for " + course.getTitle());
+                return;
+            }
+        }
+    }
+
+    public void completeEnrollment(Student student, Course course) {
+        for (Enrollment e : enrollments) {
+            if (e.getStudent().getId() == student.getId() && e.getCourse().getId() == course.getId()) {
+                if (e.getStatus() == Enrollment.Status.COMPLETED) {
+                    throw new IllegalStateException("Enrollment already completed.");
+                }
+                if (e.getStatus() == Enrollment.Status.CANCELLED) {
+                    throw new IllegalStateException("Cannot complete a cancelled enrollment.");
+                }
+                e.setStatus(Enrollment.Status.COMPLETED);
+                System.out.println(student.getName() + " completed " + course.getTitle());
+                return;
+            }
+        }
+        throw new IllegalArgumentException("Enrollment not found for " + student.getName());
+    }
 }

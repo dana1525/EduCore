@@ -17,8 +17,8 @@ public class Main {
         // test data
         Instructor instructor = new Instructor(1, "Marian Preda", "marian.preda@gmail.com", "pass", "Java");
 
-        Course course1 = new Course(1, "Java OOP", "Curs Java", instructor);
-        Course course2 = new Course(2, "Baze de date", "SQL", instructor);
+        Course course1 = new Course(1, "Java OOP", "Curs Java", instructor, Course.Difficulty.ADVANCED);
+        Course course2 = new Course(2, "Baze de date", "SQL", instructor, Course.Difficulty.INTERMEDIATE);
 
         Module module1 = new Module(1, "Mostenire", 1);
         course1.addModule(module1);
@@ -71,8 +71,15 @@ public class Main {
 
         score = quizService.completeQuiz(quiz, List.of("extends"));
         studentService.updateProgress(student1, score);
-        certificateService.issueCertificate(student1, course1);
-        certificateService.issueCertificate(student1, course1);
+
+        try {
+            enrollmentService.completeEnrollment(student1, course1);
+            certificateService.issueCertificate(student1, course1);
+            certificateService.issueCertificate(student1, course1);
+            enrollmentService.cancelEnrollment(student1, course1);
+        } catch (IllegalStateException | IllegalArgumentException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
 
         System.out.println("--- Certificates issues for " + student1.getName() + " ---");
         certificateService.listCertificatesById(student1);
