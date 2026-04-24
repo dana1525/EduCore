@@ -3,10 +3,11 @@ package com.elearning.model;
 import java.time.LocalDate;
 
 public class Certificate {
-    private int id;
-    private Course course;
-    private Student student;
-    private LocalDate issueDate;
+    // un certificat odata emis nu se modifica niciodata
+    private final int id;
+    private final Course course;
+    private final Student student;
+    private final LocalDate issueDate;
 
     public Certificate(int id, Course course, Student student) {
         this.id = id;

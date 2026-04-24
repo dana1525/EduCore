@@ -1,14 +1,15 @@
 package com.elearning.model;
+import com.elearning.enums.Specialty;
 
 public class Instructor extends User {
-    private String specialty;
+    private Specialty specialty;
 
-    public Instructor(int id, String name, String email, String password, String specialty) {
+    public Instructor(int id, String name, String email, String password, Specialty specialty) {
         super(id, name, email, password);
         this.specialty = specialty;
     }
 
-    public String getSpecialty() {
+    public Specialty getSpecialty() {
         return specialty;
     }
 

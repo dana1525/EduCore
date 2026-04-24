@@ -1,22 +1,20 @@
 package com.elearning.model;
-
+import com.elearning.enums.EnrollmentStatus;
 import java.time.LocalDate;
 
 public class Enrollment {
-    public enum Status { ACTIVE, COMPLETED, CANCELLED };
-
-    private int id;
-    private Course course;
-    private Student student;
-    private LocalDate enrollmentDate;
-    private Status status;
+    private final int id;
+    private final Course course;
+    private final Student student;
+    private final LocalDate enrollmentDate;
+    private EnrollmentStatus status;
 
     public Enrollment(int id, Course course, Student student) {
         this.id = id;
         this.course = course;
         this.student = student;
         this.enrollmentDate = LocalDate.now();
-        this.status = Status.ACTIVE;
+        this.status = EnrollmentStatus.ACTIVE;
     }
 
     public int getId() {
@@ -35,11 +33,11 @@ public class Enrollment {
         return enrollmentDate;
     }
 
-    public Status getStatus() {
+    public EnrollmentStatus getStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(EnrollmentStatus status) {
         this.status = status;
     }
 

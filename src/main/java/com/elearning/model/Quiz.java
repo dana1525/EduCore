@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Quiz {
-    private int id;
+    private final int id;
     private String title;
     private List<Question> questions;
 

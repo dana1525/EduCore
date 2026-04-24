@@ -3,14 +3,15 @@ package com.elearning.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Module {
-    private int id;
+public class CourseModule {
+    private static int nextId;
+    private final int id;
     private String title;
     private int position;
     private List<Quiz> quizzes;
 
-    public Module(int id, String title, int position) {
-        this.id = id;
+    public CourseModule(String title, int position) {
+        this.id = ++nextId;
         this.title = title;
         this.position = position;
         this.quizzes = new ArrayList<>();

@@ -7,7 +7,7 @@ import java.util.List;
 
 public class StudentService {
     private List<Student> students = new ArrayList<>();
-    private int nextIdx;
+    private static int nextIdx;
 
     public Student registerStudent(String name, String email, String password) {
         for (Student s : students) {
@@ -17,7 +17,6 @@ public class StudentService {
         }
         Student student = new Student(++nextIdx, name, email, password);
         students.add(student);
-        System.out.println("Student registered: " + student.getName());
         return student;
     }
 

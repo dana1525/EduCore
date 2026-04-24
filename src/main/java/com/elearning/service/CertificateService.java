@@ -9,7 +9,7 @@ import java.util.List;
 
 public class CertificateService {
     private List<Certificate> certificates = new ArrayList<>();
-    private int nextId;
+    private static int nextId;
 
     public void issueCertificate(Student student, Course course) {
         if (student.getProgress() < 100.0) {

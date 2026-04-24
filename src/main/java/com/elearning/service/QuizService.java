@@ -1,6 +1,6 @@
 package com.elearning.service;
 
-import com.elearning.model.Module;
+import com.elearning.model.CourseModule;
 import com.elearning.model.Question;
 import com.elearning.model.Quiz;
 
@@ -10,10 +10,10 @@ import java.util.List;
 public class QuizService {
     private List<Quiz> quizzes = new ArrayList<>();
     // stocare si questions pentru cautare ulterioara dupa id ??
-    private int nextQuizId;
-    private int nextQuestionId;
+    private static int nextQuizId;
+    private static int nextQuestionId;
 
-    public Quiz createQuiz(String title, Module module) {
+    public Quiz createQuiz(String title, CourseModule module) {
         Quiz quiz = new Quiz(++nextQuizId, title);
         module.addQuiz(quiz);
         quizzes.add(quiz);

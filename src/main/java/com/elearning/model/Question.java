@@ -4,10 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Question {
-    private int id;
-    private String title;
-    private String correctAnswer;
-    private List<String> options;
+    // o intrebare o data create nu se mai modifica
+    private final int id;
+    private final String title;
+    private final String correctAnswer;
+    private final List<String> options;
 
     public Question(int id, String title, String correctAnswer, List<String> options) {
         this.id = id;

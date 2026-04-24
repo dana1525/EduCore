@@ -1,16 +1,14 @@
 package com.elearning.model;
-
+import com.elearning.enums.Difficulty;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Course {
-    public enum Difficulty { BEGINNER, INTERMEDIATE, ADVANCED };
-
-    private int id;
+    private final int id;
     private String title;
-    private String description; // ??
+    private String description;
     private Instructor instructor;
-    private List<Module> modules;
+    private List<CourseModule> modules;
     private Difficulty difficulty;
 
     public Course(int id, String title, String description, Instructor instructor, Difficulty difficulty) {
@@ -22,7 +20,7 @@ public class Course {
         this.modules = new ArrayList<>();
     }
 
-    public void addModule(Module module) {
+    public void addModule(CourseModule module) {
         modules.add(module);
     }
 
@@ -42,7 +40,7 @@ public class Course {
         return instructor;
     }
 
-    public List<Module> getModule() {
+    public List<CourseModule> getModule() {
         return new ArrayList<>(modules);
     }
 
