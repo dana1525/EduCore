@@ -59,9 +59,11 @@ public class Main {
             Quiz quiz = quizService.createQuiz("Mostenire", module1);
             quizService.addQuestion(quiz, "Ce cuvant cheie folosim pentru mostenire in Java?", "extends",
                     List.of("extends", "implements", "inherits", "super"));
+            quizService.addQuestion(quiz, "Ce cuvant cheie este folosit in interiorul unui constructor din subclasa pentru a apela constructorul superclasei?", "super()",
+                    List.of("parent()", "this()", "super()", "extends()"));
             quizService.listQuestions(quiz);
 
-            double score = quizService.completeQuiz(quiz, List.of("super"));
+            double score = quizService.completeQuiz(quiz, List.of("super", "super()"));
             studentService.updateProgress(student1, score);
             certificateService.issueCertificate(student1, course1);
 
