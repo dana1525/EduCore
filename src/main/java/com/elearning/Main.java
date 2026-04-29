@@ -46,7 +46,6 @@ public class Main {
 
             enrollmentService.enrollStudent(student1, course1);
             enrollmentService.enrollStudent(student2, course2);
-
             enrollmentService.enrollStudent(student3, course1);
 
             System.out.println("--- Enrollments for student " + student1.getName() + " ---");
@@ -63,18 +62,18 @@ public class Main {
                     List.of("parent()", "this()", "super()", "extends()"));
             quizService.listQuestions(quiz);
 
-            double score = quizService.completeQuiz(quiz, List.of("super", "super()"));
+            double score = quizService.completeQuiz(quiz, student1, List.of("super", "super()")); // raspunsuri gresite
             studentService.updateProgress(student1, score);
             certificateService.issueCertificate(student1, course1);
 
-            score = quizService.completeQuiz(quiz, List.of("extends"));
+            score = quizService.completeQuiz(quiz, student1, List.of("extends", "super()"));
             studentService.updateProgress(student1, score);
 
             try {
-                enrollmentService.completeEnrollment(student1, course1);
-                certificateService.issueCertificate(student1, course1);
-                certificateService.issueCertificate(student1, course1);
-                enrollmentService.cancelEnrollment(student1, course1);
+                enrollmentService.completeEnrollment(student1, course1); // completare inscriere
+                certificateService.issueCertificate(student1, course1); // emitere certificat
+//                certificateService.issueCertificate(student1, course1); // esueaza, certificat deja emis
+//                enrollmentService.cancelEnrollment(student1, course1); // esueaza, inscrierea e deja completed
             } catch (IllegalStateException | IllegalArgumentException e) {
                 System.out.println("Error: " + e.getMessage());
             }

@@ -26,8 +26,9 @@ public class CertificateService {
         }
 
         if(alreadyExists) {
-            System.out.println("Certificate already exists for " + student.getName());
-            return;
+//            System.out.println("Certificate already exists for " + student.getName());
+//            return;
+            throw new IllegalArgumentException("Certificate already exists for " + student.getName());
         }
 
         Certificate certificate = new Certificate(++nextId, course, student);

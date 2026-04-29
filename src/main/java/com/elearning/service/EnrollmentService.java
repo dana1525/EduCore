@@ -50,7 +50,7 @@ public class EnrollmentService {
         for (Enrollment e : enrollments) {
             if (e.getStudent().getId() == student.getId() && e.getCourse().getId() == course.getId()) {
                 if (e.getStatus() == EnrollmentStatus.COMPLETED) {
-                    throw new IllegalStateException("Enrollment already completed.");
+                    throw new IllegalStateException("Enrollment already completed by student ." + student.getName());
                 }
                 if (e.getStatus() == EnrollmentStatus.CANCELLED) {
                     throw new IllegalStateException("Cannot complete a cancelled enrollment.");

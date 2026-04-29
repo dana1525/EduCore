@@ -3,6 +3,7 @@ package com.elearning.service;
 import com.elearning.model.CourseModule;
 import com.elearning.model.Question;
 import com.elearning.model.Quiz;
+import com.elearning.model.Student;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +28,7 @@ public class QuizService {
         System.out.println("Question added to quiz: " + quiz.getTitle());
     }
 
-    public double completeQuiz(Quiz quiz, List<String> answers) {
+    public double completeQuiz(Quiz quiz, Student student, List<String> answers) {
         List<Question> questions = quiz.getQuestions();
 
         if (answers.size() != questions.size()) {
@@ -42,7 +43,7 @@ public class QuizService {
         }
 
         double score = (double) right / questions.size() * 100;
-        System.out.println("Score: " + right + "/" + questions.size() + " (" + score + "%)");
+        System.out.println(student.getName() + " scored: " + right + "/" + questions.size() + " (" + score + "%)");
         return score;
     }
 
