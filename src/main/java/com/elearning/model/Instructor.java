@@ -15,6 +15,6 @@ public class Instructor extends User {
 
     @Override
     public String getRole() {
-        return "Instructor";
+        return "INSTRUCTOR";
     }
 }

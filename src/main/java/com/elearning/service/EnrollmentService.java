@@ -13,6 +13,14 @@ public class EnrollmentService {
     private static int nextId;
 
     public void enrollStudent(Student student, Course course) {
+        // verificare daca exista deja o inscriere ACTIVE
+        for (Enrollment e : enrollments) {
+            if (e.getStudent().getId() == student.getId()
+                    && e.getCourse().getId() == course.getId()
+                    && e.getStatus() == EnrollmentStatus.ACTIVE) {
+                throw new IllegalArgumentException("Student already enrolled in this course");
+            }
+        }
         enrollments.add(new Enrollment(++nextId, course, student));
     }
 

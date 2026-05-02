@@ -3,7 +3,6 @@ package com.elearning.service;
 import com.elearning.model.CourseModule;
 import com.elearning.model.Question;
 import com.elearning.model.Quiz;
-import com.elearning.model.Student;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +22,10 @@ public class QuizService {
     }
 
     public void addQuestion(Quiz quiz, String text, String correctAnswer, List<String> options) {
+        // verificare ca raspunsul corect exista in lista de variante
+        if (!options.contains(correctAnswer)) {
+            throw new IllegalArgumentException("Correct answer must be one of the options.");
+        }
         Question question = new Question(++nextQuestionId, text, correctAnswer, options);
         quiz.addQuestion(question);
         System.out.println("Question added to quiz: " + quiz.getTitle());
