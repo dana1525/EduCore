@@ -18,6 +18,7 @@ src/main/java/com/elearning/
 │   ├── Course.java
 │   ├── CourseModule.java
 │   ├── Quiz.java
+│   ├── QuizResult.java
 │   ├── Question.java
 │   ├── Enrollment.java
 │   └── Certificate.java
@@ -27,6 +28,7 @@ src/main/java/com/elearning/
 │   ├── CourseService.java
 │   ├── EnrollmentService.java
 │   ├── QuizService.java
+│   ├── QuizResultService.java
 │   └── CertificateService.java
 └── Main.java
 ```
@@ -48,6 +50,7 @@ src/main/java/com/elearning/
 13. List enrollments by student
 14. List students by course
 15. List certificates by student
+16. Get best quiz score for a student
 
 ## How to Run
 
