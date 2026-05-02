@@ -3,7 +3,6 @@ package com.elearning;
 import com.elearning.enums.Difficulty;
 import com.elearning.enums.Specialty;
 import com.elearning.model.*;
-import com.elearning.model.CourseModule;
 import com.elearning.service.*;
 
 import java.util.List;
@@ -13,6 +12,7 @@ public class Main {
         CourseService courseService = new CourseService();
         EnrollmentService enrollmentService = new EnrollmentService();
         QuizService quizService = new QuizService();
+        QuizResultService quizResultService = new QuizResultService();
         StudentService studentService = new StudentService();
         CertificateService certificateService = new CertificateService();
         InstructorService instructorService = new InstructorService();
@@ -62,12 +62,12 @@ public class Main {
                     List.of("parent()", "this()", "super()", "extends()"));
             quizService.listQuestions(quiz);
 
-            double score = quizService.completeQuiz(quiz, student1, List.of("super", "super()")); // raspunsuri gresite
-            studentService.updateProgress(student1, score);
+            QuizResult result1 = quizResultService.completeQuiz(quiz, student1, List.of("super", "super()")); // raspunsuri gresite
+            studentService.updateProgress(student1, quizResultService.getBestScore(student1, quiz));
             certificateService.issueCertificate(student1, course1);
 
-            score = quizService.completeQuiz(quiz, student1, List.of("extends", "super()"));
-            studentService.updateProgress(student1, score);
+            QuizResult result2 = quizResultService.completeQuiz(quiz, student1, List.of("extends", "super()"));
+            studentService.updateProgress(student1, quizResultService.getBestScore(student1, quiz));
 
             try {
                 enrollmentService.completeEnrollment(student1, course1); // completare inscriere

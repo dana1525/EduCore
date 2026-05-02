@@ -28,25 +28,6 @@ public class QuizService {
         System.out.println("Question added to quiz: " + quiz.getTitle());
     }
 
-    public double completeQuiz(Quiz quiz, Student student, List<String> answers) {
-        List<Question> questions = quiz.getQuestions();
-
-        if (answers.size() != questions.size()) {
-            return 0;
-        }
-
-        int right = 0;
-        for (int i = 0; i < questions.size(); i++) {
-            if (questions.get(i).check(answers.get(i))) {
-                right++;
-            }
-        }
-
-        double score = (double) right / questions.size() * 100;
-        System.out.println(student.getName() + " scored: " + right + "/" + questions.size() + " (" + score + "%)");
-        return score;
-    }
-
     public void listQuestions(Quiz quiz) {
         System.out.println("Quiz: " + quiz.getTitle());
         for (Question q : quiz.getQuestions()) {
