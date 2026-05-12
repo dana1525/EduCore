@@ -125,7 +125,7 @@ public class StudentRepository {
     // DELETE
     public void delete(int id) throws SQLException {
         String sqlUser = "DELETE FROM users WHERE id = ?";
-        String sqlStudent = "DELETE FROM students WHERE id = ?";
+        String sqlStudent = "DELETE FROM students WHERE user_id = ?";
 
         try {
             connection.setAutoCommit(false);
