@@ -1,37 +1,59 @@
 package com.elearning.service;
 
 import com.elearning.model.Student;
+import com.elearning.repository.StudentRepository;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class StudentService {
-    private List<Student> students = new ArrayList<>();
-    private static int nextIdx;
+//    private List<Student> students = new ArrayList<>();
+//    private static int nextIdx;
+    private StudentRepository students = new StudentRepository();
 
     public Student registerStudent(String name, String email, String password) {
-        for (Student s : students) {
-            if (s.getEmail().equals(email)) {
+        try {
+            if (students.findByEmail(email) != null) {
                 throw new IllegalArgumentException("Student already exists: " + email);
             }
+            Student student = new Student(name, email, password);
+            students.save(student);
+            return student;
+        } catch (SQLException e) {
+            throw new RuntimeException("Error registering student: " + e.getMessage());
         }
-        Student student = new Student(++nextIdx, name, email, password);
-        students.add(student);
-        return student;
+
     }
 
-    public void updateProgress(Student student, double progress) {
-        student.setProgress(progress);
-        System.out.println("Progress updated: " + student.getName() + " -> " + student.getProgress() + " %");
+    public void updateProgress(int studentId, double progress) {
+        try {
+            Student student = students.findById(studentId);
+            if (student == null) {
+                System.out.println("Student not found");
+                return;
+            }
+            student.setProgress(progress);
+            students.update(student);
+            System.out.println("Progress updated: " + student.getName() + " -> " + student.getProgress() + " %");
+        } catch (SQLException e) {
+            System.err.println("Failed to update progress: " + e.getMessage());
+        }
     }
 
     public void listAllStudents() {
-        if (students.isEmpty()) {
-            System.out.println("No students registered");
-            return;
+        try {
+            List<Student> allStudents = students.findAll();
+            if (allStudents.isEmpty()) {
+                System.out.println("No students registered");
+                return;
+            }
+            for (Student s : allStudents) {
+                System.out.println(s);
+            }
+        } catch (SQLException e) {
+            System.err.println("Error listing students " + e.getMessage());
         }
-        for (Student s : students) {
-            System.out.println(s);
-        }
+
     }
 }

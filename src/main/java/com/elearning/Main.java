@@ -63,11 +63,11 @@ public class Main {
             quizService.listQuestions(quiz);
 
             QuizResult result1 = quizResultService.completeQuiz(quiz, student1, List.of("super", "super()")); // raspunsuri gresite
-            studentService.updateProgress(student1, quizResultService.getBestScore(student1, quiz));
+            studentService.updateProgress(student1.getId(), quizResultService.getBestScore(student1, quiz));
             certificateService.issueCertificate(student1, course1);
 
             QuizResult result2 = quizResultService.completeQuiz(quiz, student1, List.of("extends", "super()"));
-            studentService.updateProgress(student1, quizResultService.getBestScore(student1, quiz));
+            studentService.updateProgress(student1.getId(), quizResultService.getBestScore(student1, quiz));
 
             try {
                 enrollmentService.completeEnrollment(student1, course1); // completare inscriere
