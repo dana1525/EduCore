@@ -1,14 +1,25 @@
 package com.elearning;
 
+import com.elearning.config.DatabaseConnection;
 import com.elearning.enums.Difficulty;
 import com.elearning.enums.Specialty;
 import com.elearning.model.*;
 import com.elearning.service.*;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
 
 public class Main {
-    static void main() {
+    private static void clearDatabase(Connection connection) throws SQLException {
+        connection.createStatement().executeUpdate(
+                "TRUNCATE users, students, instructors, courses, modules, quizzes " +
+                ", questions, options, enrollments, certificates, quiz_results RESTART IDENTITY CASCADE");
+    }
+
+    static void main() throws SQLException {
+        clearDatabase(DatabaseConnection.getInstance().getConnection());
+
         CourseService courseService = new CourseService();
         EnrollmentService enrollmentService = new EnrollmentService();
         QuizService quizService = new QuizService();
@@ -39,10 +50,12 @@ public class Main {
             Student student1 = studentService.registerStudent("Andreea", "andreea@gmail.com", "pass1");
             Student student2 = studentService.registerStudent("Mara", "mara@gmail.com", "pass2");
             Student student3 = studentService.registerStudent("Andrei", "andrei@gmail.com", "pass3");
-//            Student student4 = studentService.registerStudent("Ana", "andrei@gmail.com", "pass4");
+            Student student4 = studentService.registerStudent("Ana", "ana@gmail.com", "pass4");
 
             System.out.println("--- List all students registered ---");
             studentService.listAllStudents();
+
+            studentService.deleteStudent(student4.getId());
 
             enrollmentService.enrollStudent(student1, course1);
             enrollmentService.enrollStudent(student2, course2);
@@ -83,7 +96,5 @@ public class Main {
         } catch (IllegalArgumentException e) {
             System.out.println("Error: " + e.getMessage());
         }
-
-//        Connection conn = DatabaseConnection.getInstance().getConnection();
     }
 }

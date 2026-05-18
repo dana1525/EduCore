@@ -1,0 +1,27 @@
+package com.elearning.repository;
+import com.elearning.config.DatabaseConnection;
+
+import java.sql.*;
+import java.util.List;
+
+public abstract class GenericRepository<T> {
+    protected Connection connection = DatabaseConnection.getInstance().getConnection();
+
+    public abstract T save(T entity) throws SQLException;
+    public abstract T findById(int id) throws SQLException;
+    public abstract List<T> findAll() throws SQLException;
+    public abstract void update(T entity) throws SQLException;
+    public abstract void delete(int id) throws SQLException;
+
+    // helper function for all repositories
+    protected void executeUpdate(String sql, Object... params){
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            for (int i = 0; i < params.length; i++) {
+                stmt.setObject(i + 1, params[i]);
+            }
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Database error: " + e.getMessage(), e);
+        }
+    }
+}

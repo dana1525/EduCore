@@ -54,6 +54,17 @@ public class StudentService {
         } catch (SQLException e) {
             System.err.println("Error listing students " + e.getMessage());
         }
+    }
 
+    public void deleteStudent(int id) {
+        try {
+            if (students.findById(id) == null) {
+                throw new IllegalArgumentException("Student not found: " + id);
+            }
+            students.delete(id);
+            System.out.println("Student deleted: " + id);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
