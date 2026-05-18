@@ -4,7 +4,6 @@ import com.elearning.model.Student;
 import com.elearning.repository.StudentRepository;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class StudentService {
@@ -21,7 +20,7 @@ public class StudentService {
             students.save(student);
             return student;
         } catch (SQLException e) {
-            throw new RuntimeException("Error registering student: " + e.getMessage());
+            throw new RuntimeException("Error registering student: " + e);
         }
 
     }
@@ -37,7 +36,7 @@ public class StudentService {
             students.update(student);
             System.out.println("Progress updated: " + student.getName() + " -> " + student.getProgress() + " %");
         } catch (SQLException e) {
-            System.err.println("Failed to update progress: " + e.getMessage());
+            throw new RuntimeException("Failed to update progress.", e);
         }
     }
 
@@ -52,7 +51,7 @@ public class StudentService {
                 System.out.println(s);
             }
         } catch (SQLException e) {
-            System.err.println("Error listing students " + e.getMessage());
+            throw new RuntimeException("Error listing students.", e);
         }
     }
 

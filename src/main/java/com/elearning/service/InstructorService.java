@@ -2,41 +2,49 @@ package com.elearning.service;
 
 import com.elearning.enums.Specialty;
 import com.elearning.model.Instructor;
+import com.elearning.repository.InstructorRepository;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class InstructorService {
-    private List<Instructor> instructors = new ArrayList<>();
-    private static int nextId;
+//    private List<Instructor> instructors = new ArrayList<>();
+//    private static int nextId;
+    private InstructorRepository repository = new InstructorRepository();
 
     public Instructor registerInstructor(String name, String email, String password, Specialty specialty) {
-        boolean alreadyExists = instructors.stream()
-                .anyMatch(i -> i.getEmail().equals(email));
-
-        if(alreadyExists) {
-            throw new IllegalArgumentException("Instructor already exists: " + email);
+        try {
+            if(repository.findByEmail(email) != null) {
+                throw new IllegalArgumentException("Instructor already exists: " + email);
+            }
+            Instructor instructor = new Instructor(name, email, password, specialty);
+            return repository.save(instructor);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
 
-        Instructor instructor = new Instructor(++nextId, name, email, password, specialty);
-        instructors.add(instructor);
-        return instructor;
     }
 
     public void listAllInstructors() {
-        instructors.forEach(System.out::println);
+        try {
+            repository.findAll().forEach(System.out::println);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public Instructor findById(int id) {
-        return instructors.stream()
-                .filter(i -> i.getId() == id)
-                .findFirst()
-                .orElse(null);
+        try {
+            return repository.findById(id);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    public List<Instructor> findBySpecialty(Specialty specialty) {
-        return instructors.stream()
-                .filter(i -> i.getSpecialty() == specialty)
-                .toList();
-    }
+//    public List<Instructor> findBySpecialty(Specialty specialty) {
+//        return instructors.stream()
+//                .filter(i -> i.getSpecialty() == specialty)
+//                .toList();
+//    }
 }

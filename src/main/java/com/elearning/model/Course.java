@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Course {
-    private final int id;
+    private int id;
     private String title;
     private String description;
     private Instructor instructor;
@@ -40,9 +40,13 @@ public class Course {
         return instructor;
     }
 
+    public Difficulty getDifficulty() { return difficulty; }
+
     public List<CourseModule> getModule() {
         return new ArrayList<>(modules);
     }
+
+    public void setId(int id) { this.id = id; }
 
     @Override
     public String toString() {

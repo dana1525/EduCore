@@ -9,6 +9,11 @@ public class Instructor extends User {
         this.specialty = specialty;
     }
 
+    public Instructor(String name, String email, String password, Specialty specialty) {
+        super(0, name, email, password);
+        this.specialty = specialty;
+    }
+
     public Specialty getSpecialty() {
         return specialty;
     }

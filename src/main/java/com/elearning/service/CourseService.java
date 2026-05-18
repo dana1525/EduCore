@@ -7,34 +7,44 @@ import com.elearning.enums.Difficulty;
 import com.elearning.model.Course;
 import com.elearning.model.CourseModule;
 import com.elearning.model.Instructor;
+import com.elearning.repository.CourseRepository;
+
+import java.sql.SQLException;
+import java.util.List;
 import java.util.TreeMap;
 
 public class CourseService {
     // Existing Comparator in Java
-    // Fast search by key and sorted order
-    private TreeMap<String, Course> courses = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-    private static int nextId;
+//    private TreeMap<String, Course> courses = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+//    private static int nextId;
+    private CourseRepository repository = new CourseRepository();
 
-    public Course addCourse(String title, String description, Instructor instructor, Difficulty difficulty) {
-        if (courses.containsKey(title)){
-            throw new IllegalArgumentException("A couse with this title already exists: " + title);
+    public Course addCourse(String title, String description, Instructor instructor, Difficulty difficulty) throws SQLException {
+        try {
+            if (repository.findByTitle(title) != null) {
+                throw new IllegalArgumentException("A couse with this title already exists: " + title);
+            }
+            return repository.save(new Course(0, title, description, instructor, difficulty));
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
-        Course course = new Course(++nextId, title, description, instructor, difficulty);
-        courses.put(title, course);
-        return course;
     }
 
     public void listAllCourses() {
-        for (Course course : courses.values()) {
-            System.out.println(course);
+        try {
+            List<Course> courses = repository.findAll();
+            courses.forEach(System.out::println);
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to list all courses" + e);
         }
     }
 
     public Course findById(int id) {
-        for (Course course : courses.values()) {
-            if (course.getId() == id) return course;
+        try {
+            return repository.findById(id);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
-        return null;
     }
 
     public CourseModule addModuleToCourse(int courseId, String moduleTitle, int position) {

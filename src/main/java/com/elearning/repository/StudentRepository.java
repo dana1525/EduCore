@@ -2,11 +2,27 @@ package com.elearning.repository;
 import com.elearning.model.Student;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
 
 public class StudentRepository extends GenericRepository<Student> {
-    private Student mapRow(ResultSet rs) throws SQLException {
+    // READ
+    @Override
+    protected String getFindByIdSql() {
+        return "SELECT * FROM users join students on id = user_id WHERE users.id = ?";
+    }
+
+    @Override
+    protected String getFindAllSql() {
+        return "SELECT * FROM users join students on users.id = students.user_id";
+    }
+
+    // DELETE
+    @Override
+    protected String getDeleteSql() {
+        return "DELETE FROM users WHERE id = ?"; // CASCADE delete from students automatically
+    }
+
+    @Override
+    protected Student mapRow(ResultSet rs) throws SQLException {
         return new Student(
                 rs.getInt("id"),
                 rs.getString("name"),
@@ -16,7 +32,7 @@ public class StudentRepository extends GenericRepository<Student> {
         );
     };
 
-    // CREATE
+    // CREATE (transaction - 2 tabels)
     public Student save(Student student) throws SQLException {
         String sqlUser = "INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)";
         String sqlStudent = "INSERT INTO students (user_id, progress) VALUES (?, ?)";
@@ -36,44 +52,7 @@ public class StudentRepository extends GenericRepository<Student> {
         }
     }
 
-    // READ
-    public Student findById(int id) throws SQLException {
-        String sql = "SELECT * FROM users join students on id = user_id where users.id = ?";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setInt(1, id);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                return mapRow(rs);
-            }
-        }
-        return null;
-    }
-
-    public Student findByEmail(String email) throws SQLException {
-        String sql = "SELECT * FROM users join students on users.id = students.user_id where email = ?";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            stmt.setString(1, email);
-            ResultSet rs = stmt.executeQuery();
-            if (rs.next()) {
-                return mapRow(rs);
-            }
-        }
-        return null;
-    }
-
-    public List<Student> findAll() throws SQLException {
-        List<Student> students = new ArrayList<>();
-        String sql = "SELECT * FROM users join students on users.id = students.user_id";
-        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
-            ResultSet rs = stmt.executeQuery();
-            while (rs.next()) {
-                students.add(mapRow(rs));
-            }
-        }
-        return students;
-    }
-
-    // UPDATE (transaction in this method)
+    // UPDATE (transaction - 2 tabels)
     public void update(Student student) throws SQLException {
         String sqlUser = "UPDATE users SET name = ?, email = ?, password = ? WHERE users.id = ?";
         String sqlStudent = "UPDATE students SET progress = ? WHERE user_id = ?";
@@ -95,14 +74,22 @@ public class StudentRepository extends GenericRepository<Student> {
             connection.commit();
         } catch (SQLException e) {
             connection.rollback();
-            throw new RuntimeException("Failed to update student.", e);
+            throw e;
         } finally {
             connection.setAutoCommit(true);
         }
     }
 
-    // DELETE
-    public void delete(int id) {
-        executeUpdate("DELETE FROM users WHERE id = ?", id);
+    // Specific method
+    public Student findByEmail(String email) throws SQLException {
+        String sql = "SELECT * FROM users join students on users.id = students.user_id where email = ?";
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setString(1, email);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return mapRow(rs);
+            }
+        }
+        return null;
     }
 }

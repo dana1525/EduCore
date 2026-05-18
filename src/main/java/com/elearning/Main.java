@@ -17,7 +17,7 @@ public class Main {
                 ", questions, options, enrollments, certificates, quiz_results RESTART IDENTITY CASCADE");
     }
 
-    static void main() throws SQLException {
+    public static void main() throws SQLException {
         clearDatabase(DatabaseConnection.getInstance().getConnection());
 
         CourseService courseService = new CourseService();
@@ -36,8 +36,8 @@ public class Main {
             System.out.println("--- List all instructors registered ---");
             instructorService.listAllInstructors();
 
-            System.out.println("--- List all JAVA instructors ---");
-            System.out.println(instructorService.findBySpecialty(Specialty.JAVA));
+//            System.out.println("--- List all JAVA instructors ---");
+//            System.out.println(instructorService.findBySpecialty(Specialty.JAVA));
 
             Course course1 = courseService.addCourse("Java OOP", "Curs Java", instructor1, Difficulty.ADVANCED);
             Course course2 = courseService.addCourse("Baze de date", "SQL", instructor2, Difficulty.INTERMEDIATE);
@@ -93,7 +93,7 @@ public class Main {
 
             System.out.println("--- Certificates issues for " + student1.getName() + " ---");
             certificateService.listCertificatesById(student1);
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException | SQLException e) {
             System.out.println("Error: " + e.getMessage());
         }
     }
