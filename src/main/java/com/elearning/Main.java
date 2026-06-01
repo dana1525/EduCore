@@ -93,6 +93,12 @@ public class Main {
 
             System.out.println("--- Certificates issues for " + student1.getName() + " ---");
             certificateService.listCertificatesById(student1);
+
+            module1.setTitle("Mostenire si Polimorfism");
+            courseService.updateModule(module1);
+
+            System.out.println("--- Modules for " + course1.getTitle() + " ---");
+            courseService.getModulesByCourse(course1.getId()).forEach(System.out::println);
         } catch (IllegalArgumentException | SQLException e) {
             System.out.println("Error: " + e.getMessage());
         }

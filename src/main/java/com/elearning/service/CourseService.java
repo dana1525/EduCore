@@ -7,17 +7,18 @@ import com.elearning.enums.Difficulty;
 import com.elearning.model.Course;
 import com.elearning.model.CourseModule;
 import com.elearning.model.Instructor;
+import com.elearning.repository.CourseModuleRepository;
 import com.elearning.repository.CourseRepository;
 
 import java.sql.SQLException;
 import java.util.List;
-import java.util.TreeMap;
 
 public class CourseService {
     // Existing Comparator in Java
 //    private TreeMap<String, Course> courses = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 //    private static int nextId;
     private CourseRepository repository = new CourseRepository();
+    private CourseModuleRepository moduleRepository = new CourseModuleRepository();
 
     public Course addCourse(String title, String description, Instructor instructor, Difficulty difficulty) throws SQLException {
         try {
@@ -47,13 +48,21 @@ public class CourseService {
         }
     }
 
-    public CourseModule addModuleToCourse(int courseId, String moduleTitle, int position) {
+    public CourseModule addModuleToCourse(int courseId, String moduleTitle, int position) throws SQLException {
         Course course = findById(courseId);
         if (course == null) {
             throw new IllegalArgumentException("Course not found:" + courseId);
         }
-        CourseModule module = new CourseModule(moduleTitle, position);
-        course.addModule(module);
-        return module;
+        CourseModule module = new CourseModule(moduleTitle, position, courseId);
+//        course.addModule(module);
+        return moduleRepository.save(module);
+    }
+
+    public void updateModule(CourseModule module) throws SQLException {
+        moduleRepository.update(module);
+    }
+
+    public List<CourseModule> getModulesByCourse(int courseId) throws SQLException {
+        return moduleRepository.findByCourseId(courseId);
     }
 }
