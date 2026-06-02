@@ -10,19 +10,23 @@ import com.elearning.model.Instructor;
 import com.elearning.repository.CourseModuleRepository;
 import com.elearning.repository.CourseRepository;
 
+import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 
 public class CourseService {
     private CourseRepository courseRepository = new CourseRepository();
     private CourseModuleRepository moduleRepository = new CourseModuleRepository();
+    private AuditService audit = AuditService.getInstance();
 
     public Course addCourse(String title, String description, Instructor instructor, Difficulty difficulty) {
         try {
             if (courseRepository.findByTitle(title) != null) {
                 throw new IllegalArgumentException("A course with this title already exists: " + title);
             }
-            return courseRepository.save(new Course(0, title, description, instructor, difficulty));
+            Course course = courseRepository.save(new Course(0, title, description, instructor, difficulty));
+            audit.log("add_course");
+            return course;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -61,12 +65,14 @@ public class CourseService {
         if (course == null) {
             throw new IllegalArgumentException("Course not found:" + courseId);
         }
-        CourseModule module = new CourseModule(moduleTitle, position, courseId);
-        return moduleRepository.save(module);
+        CourseModule module = moduleRepository.save(new CourseModule(moduleTitle, position, courseId));
+        audit.log("add_module_to_course");
+        return module;
     }
 
     public void updateModule(CourseModule module) throws SQLException {
         moduleRepository.update(module);
+        audit.log("update_module");
     }
 
     public List<CourseModule> getModulesByCourse(int courseId) {

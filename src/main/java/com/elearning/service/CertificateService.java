@@ -10,8 +10,9 @@ import java.util.List;
 
 public class CertificateService {
     private CertificateRepository certificateRepository = new CertificateRepository();
+    private AuditService audit = AuditService.getInstance();
 
-    public void issueCertificate(Student student, Course course) throws SQLException {
+    public void issueCertificate(Student student, Course course) {
         if (student.getProgress() < 100.0) {
             System.out.println("Course not completed. Current progress: " + student.getProgress() + "%");
             return;
@@ -25,6 +26,7 @@ public class CertificateService {
             }
             Certificate certificate = new Certificate(0, course, student);
             Certificate savedCertificate = certificateRepository.save(certificate);
+            audit.log("issue_certificate");
             System.out.println(savedCertificate);
 
         } catch (SQLException e) {

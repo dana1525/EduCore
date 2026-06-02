@@ -8,6 +8,7 @@ import java.util.List;
 
 public class StudentService {
     private StudentRepository studentRepository = new StudentRepository();
+    private AuditService audit = AuditService.getInstance();
 
     public Student registerStudent(String name, String email, String password) {
         try {
@@ -16,6 +17,7 @@ public class StudentService {
             }
             Student student = new Student(name, email, password);
             studentRepository.save(student);
+            audit.log("register_student");
             return student;
         } catch (SQLException e) {
             throw new RuntimeException("Error registering student: " + e);
@@ -32,6 +34,7 @@ public class StudentService {
             }
             student.setProgress(progress);
             studentRepository.update(student);
+            audit.log("update_progress");
             System.out.println("Progress updated: " + student.getName() + " -> " + student.getProgress() + " %");
         } catch (SQLException e) {
             throw new RuntimeException("Failed to update progress.", e);

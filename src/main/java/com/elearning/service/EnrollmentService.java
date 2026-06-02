@@ -11,6 +11,7 @@ import java.util.List;
 
 public class EnrollmentService {
     private EnrollmentRepository enrollmentRepository = new EnrollmentRepository();
+    private AuditService audit = AuditService.getInstance();
 
     public void enrollStudent(Student student, Course course) {
         // verificare daca exista deja o inscriere ACTIVE
@@ -21,6 +22,7 @@ public class EnrollmentService {
             }
             Enrollment newEnrollment = new Enrollment(0, course, student);
             enrollmentRepository.save(newEnrollment);
+            audit.log("enroll_student");
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -59,6 +61,7 @@ public class EnrollmentService {
             }
             e.setStatus(EnrollmentStatus.CANCELLED);
             enrollmentRepository.update(e);
+            audit.log("cancel_enrollment");
             System.out.println(student.getName() + " cancelled enrollment for " + course.getTitle());
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -79,6 +82,7 @@ public class EnrollmentService {
             }
             e.setStatus(EnrollmentStatus.COMPLETED);
             enrollmentRepository.update(e);
+            audit.log("complete_enrollment");
             System.out.println(student.getName() + " completed " + course.getTitle());
         } catch (SQLException e) {
             throw new RuntimeException(e);

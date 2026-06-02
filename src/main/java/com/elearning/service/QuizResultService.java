@@ -7,6 +7,7 @@ import java.util.List;
 
 public class QuizResultService {
     private final QuizResultRepository quizResultRepository = new QuizResultRepository();
+    private AuditService audit = AuditService.getInstance();
 
     public QuizResult completeQuiz(Enrollment enrollment, Quiz quiz, List<String> answers) throws SQLException {
         List<Question> questions = quiz.getQuestions();
@@ -33,7 +34,7 @@ public class QuizResultService {
 
         double finalScore = ((double) correctCount / questions.size()) * 100;
         QuizResult result = new QuizResult(enrollment, quiz, finalScore);
-
+        audit.log("complete_quiz");
         return quizResultRepository.save(result);
     }
 

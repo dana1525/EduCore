@@ -11,9 +11,11 @@ import java.util.List;
 public class QuizService {
     private QuizRepository quizRepository = new QuizRepository();
     private QuestionRepository questionRepository = new QuestionRepository();
+    private AuditService audit = AuditService.getInstance();
 
     public Quiz createQuiz(String title, int moduleId) throws SQLException {
         Quiz quiz = new Quiz(0, title, moduleId);
+        audit.log("create_quiz");
         return quizRepository.save(quiz);
     }
 
@@ -24,6 +26,7 @@ public class QuizService {
         }
         Question question = new Question(0, text, correctAnswer, options, quiz.getId());
         Question savedQuestion = questionRepository.save(question);
+        audit.log("add_question");
         quiz.addQuestion(savedQuestion);
     }
 

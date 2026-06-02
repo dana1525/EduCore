@@ -9,14 +9,16 @@ import java.util.List;
 
 public class InstructorService {
     private InstructorRepository instructorRepository = new InstructorRepository();
+    private AuditService audit = AuditService.getInstance();
 
     public Instructor registerInstructor(String name, String email, String password, Specialty specialty) {
         try {
             if(instructorRepository.findByEmail(email) != null) {
                 throw new IllegalArgumentException("Instructor already exists: " + email);
             }
-            Instructor instructor = new Instructor(name, email, password, specialty);
-            return instructorRepository.save(instructor);
+            Instructor instructor = instructorRepository.save(new Instructor(name, email, password, specialty));
+            audit.log("register_instructor");
+            return instructor;
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
