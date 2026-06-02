@@ -14,37 +14,45 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class CourseService {
-    // Existing Comparator in Java
-//    private TreeMap<String, Course> courses = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-//    private static int nextId;
-    private CourseRepository repository = new CourseRepository();
+    private CourseRepository courseRepository = new CourseRepository();
     private CourseModuleRepository moduleRepository = new CourseModuleRepository();
 
-    public Course addCourse(String title, String description, Instructor instructor, Difficulty difficulty) throws SQLException {
+    public Course addCourse(String title, String description, Instructor instructor, Difficulty difficulty) {
         try {
-            if (repository.findByTitle(title) != null) {
-                throw new IllegalArgumentException("A couse with this title already exists: " + title);
+            if (courseRepository.findByTitle(title) != null) {
+                throw new IllegalArgumentException("A course with this title already exists: " + title);
             }
-            return repository.save(new Course(0, title, description, instructor, difficulty));
+            return courseRepository.save(new Course(0, title, description, instructor, difficulty));
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void listAllCourses() {
+    public List<Course> getAllCourses() {
         try {
-            List<Course> courses = repository.findAll();
-            courses.forEach(System.out::println);
+            List<Course> courses = courseRepository.findAll();
+            for (Course course : courses) {
+                course.setModules(moduleRepository.findByCourseId(course.getId()));
+            }
+            return courses;
         } catch (SQLException e) {
-            throw new RuntimeException("Failed to list all courses" + e);
+            throw new RuntimeException("Error listing courses.", e);
         }
     }
 
     public Course findById(int id) {
         try {
-            return repository.findById(id);
+            return courseRepository.findById(id);
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public CourseModule getModuleById(int id) {
+        try {
+            return moduleRepository.findById(id);
+        } catch (SQLException e) {
+            throw new RuntimeException("Error finding module.", e);
         }
     }
 
@@ -54,7 +62,6 @@ public class CourseService {
             throw new IllegalArgumentException("Course not found:" + courseId);
         }
         CourseModule module = new CourseModule(moduleTitle, position, courseId);
-//        course.addModule(module);
         return moduleRepository.save(module);
     }
 
@@ -62,7 +69,11 @@ public class CourseService {
         moduleRepository.update(module);
     }
 
-    public List<CourseModule> getModulesByCourse(int courseId) throws SQLException {
-        return moduleRepository.findByCourseId(courseId);
+    public List<CourseModule> getModulesByCourse(int courseId) {
+        try {
+            return moduleRepository.findByCourseId(courseId);
+        } catch (SQLException e) {
+            throw new RuntimeException("Error listing modules.", e);
+        }
     }
 }

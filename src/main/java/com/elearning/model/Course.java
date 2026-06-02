@@ -42,7 +42,7 @@ public class Course {
 
     public Difficulty getDifficulty() { return difficulty; }
 
-    public List<CourseModule> getModule() {
+    public List<CourseModule> getModules() {
         return new ArrayList<>(modules);
     }
 
@@ -51,5 +51,9 @@ public class Course {
     @Override
     public String toString() {
         return "Course: " + title + " | Instuctor: " + instructor.getName();
+    }
+
+    public void setModules(List<CourseModule> modules) {
+        this.modules = modules;
     }
 }

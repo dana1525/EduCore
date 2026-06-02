@@ -30,7 +30,7 @@ public class StudentRepository extends GenericRepository<Student> {
                 rs.getString("password"),
                 rs.getDouble("progress")
         );
-    };
+    }
 
     // CREATE (transaction - 2 tabels)
     public Student save(Student student) throws SQLException {

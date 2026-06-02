@@ -3,44 +3,43 @@ package com.elearning.service;
 import com.elearning.model.Certificate;
 import com.elearning.model.Course;
 import com.elearning.model.Student;
+import com.elearning.repository.CertificateRepository;
 
-import java.util.ArrayList;
+import java.sql.SQLException;
 import java.util.List;
 
 public class CertificateService {
-    private List<Certificate> certificates = new ArrayList<>();
-    private static int nextId;
+    private CertificateRepository certificateRepository = new CertificateRepository();
 
-    public void issueCertificate(Student student, Course course) {
+    public void issueCertificate(Student student, Course course) throws SQLException {
         if (student.getProgress() < 100.0) {
             System.out.println("Course not completed. Current progress: " + student.getProgress() + "%");
             return;
         }
 
-        boolean alreadyExists = false;
-        for (Certificate c : certificates) {
-            if (c.getStudent().getId() == student.getId() && c.getCourse().getId() == course.getId()) {
-                alreadyExists = true;
-                break;
+        try {
+            Certificate existing = certificateRepository.findByStudentAndCourse(student.getId(), course.getId());
+
+            if (existing != null) {
+                throw new IllegalArgumentException("Certificate already exists for " + student.getName());
             }
-        }
+            Certificate certificate = new Certificate(0, course, student);
+            Certificate savedCertificate = certificateRepository.save(certificate);
+            System.out.println(savedCertificate);
 
-        if(alreadyExists) {
-//            System.out.println("Certificate already exists for " + student.getName());
-//            return;
-            throw new IllegalArgumentException("Certificate already exists for " + student.getName());
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
-
-        Certificate certificate = new Certificate(++nextId, course, student);
-        certificates.add(certificate);
-        System.out.println(certificate);
     }
 
     public void listCertificatesById(Student student) {
-        for (Certificate certificate : certificates) {
-            if (certificate.getStudent().getId() == student.getId()) {
+        try {
+            List<Certificate> certificates = certificateRepository.findByStudentId(student.getId());
+            for (Certificate certificate : certificates) {
                 System.out.println(certificate);
             }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 }

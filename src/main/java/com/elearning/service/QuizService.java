@@ -1,43 +1,45 @@
 package com.elearning.service;
 
-import com.elearning.model.CourseModule;
 import com.elearning.model.Question;
 import com.elearning.model.Quiz;
+import com.elearning.repository.QuestionRepository;
+import com.elearning.repository.QuizRepository;
 
-import java.util.ArrayList;
+import java.sql.SQLException;
 import java.util.List;
 
 public class QuizService {
-    private List<Quiz> quizzes = new ArrayList<>();
-    // stocare si questions pentru cautare ulterioara dupa id ??
-    private static int nextQuizId;
-    private static int nextQuestionId;
+    private QuizRepository quizRepository = new QuizRepository();
+    private QuestionRepository questionRepository = new QuestionRepository();
 
-    public Quiz createQuiz(String title, CourseModule module) {
-        Quiz quiz = new Quiz(++nextQuizId, title);
-        module.addQuiz(quiz);
-        quizzes.add(quiz);
-        System.out.println("Quiz created: " + title + " in module " + module.getTitle());
-        return quiz;
+    public Quiz createQuiz(String title, int moduleId) throws SQLException {
+        Quiz quiz = new Quiz(0, title, moduleId);
+        return quizRepository.save(quiz);
     }
 
-    public void addQuestion(Quiz quiz, String text, String correctAnswer, List<String> options) {
+    public void addQuestion(Quiz quiz, String text, String correctAnswer, List<String> options) throws SQLException {
         // verificare ca raspunsul corect exista in lista de variante
         if (!options.contains(correctAnswer)) {
             throw new IllegalArgumentException("Correct answer must be one of the options.");
         }
-        Question question = new Question(++nextQuestionId, text, correctAnswer, options);
-        quiz.addQuestion(question);
-        System.out.println("Question added to quiz: " + quiz.getTitle());
+        Question question = new Question(0, text, correctAnswer, options, quiz.getId());
+        Question savedQuestion = questionRepository.save(question);
+        quiz.addQuestion(savedQuestion);
     }
 
-    public void listQuestions(Quiz quiz) {
-        System.out.println("Quiz: " + quiz.getTitle());
-        for (Question q : quiz.getQuestions()) {
-            System.out.println(" - " + q.getTitle());
-            for (String o : q.getOptions()) {
-                System.out.println("    * " + o);
-            }
+    public List<Quiz> getAllQuizzes() {
+        try {
+            return quizRepository.findAll();
+        } catch (SQLException e) {
+            throw new RuntimeException("Error listing quizzes.", e);
+        }
+    }
+
+    public Quiz findById(int id) {
+        try {
+            return quizRepository.findById(id);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 }

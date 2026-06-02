@@ -7,17 +7,15 @@ import java.sql.SQLException;
 import java.util.List;
 
 public class StudentService {
-//    private List<Student> students = new ArrayList<>();
-//    private static int nextIdx;
-    private StudentRepository students = new StudentRepository();
+    private StudentRepository studentRepository = new StudentRepository();
 
     public Student registerStudent(String name, String email, String password) {
         try {
-            if (students.findByEmail(email) != null) {
+            if (studentRepository.findByEmail(email) != null) {
                 throw new IllegalArgumentException("Student already exists: " + email);
             }
             Student student = new Student(name, email, password);
-            students.save(student);
+            studentRepository.save(student);
             return student;
         } catch (SQLException e) {
             throw new RuntimeException("Error registering student: " + e);
@@ -27,29 +25,22 @@ public class StudentService {
 
     public void updateProgress(int studentId, double progress) {
         try {
-            Student student = students.findById(studentId);
+            Student student = studentRepository.findById(studentId);
             if (student == null) {
                 System.out.println("Student not found");
                 return;
             }
             student.setProgress(progress);
-            students.update(student);
+            studentRepository.update(student);
             System.out.println("Progress updated: " + student.getName() + " -> " + student.getProgress() + " %");
         } catch (SQLException e) {
             throw new RuntimeException("Failed to update progress.", e);
         }
     }
 
-    public void listAllStudents() {
+    public List<Student> getAllStudents() {
         try {
-            List<Student> allStudents = students.findAll();
-            if (allStudents.isEmpty()) {
-                System.out.println("No students registered");
-                return;
-            }
-            for (Student s : allStudents) {
-                System.out.println(s);
-            }
+            return studentRepository.findAll();
         } catch (SQLException e) {
             throw new RuntimeException("Error listing students.", e);
         }
@@ -57,11 +48,19 @@ public class StudentService {
 
     public void deleteStudent(int id) {
         try {
-            if (students.findById(id) == null) {
+            if (studentRepository.findById(id) == null) {
                 throw new IllegalArgumentException("Student not found: " + id);
             }
-            students.delete(id);
+            studentRepository.delete(id);
             System.out.println("Student deleted: " + id);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public Student findById(int id) {
+        try {
+            return studentRepository.findById(id);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
