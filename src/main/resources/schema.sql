@@ -81,4 +81,10 @@ CREATE TABLE certificates (
                               issue_date DATE NOT NULL DEFAULT CURRENT_DATE
 );
 
-0
+CREATE TABLE quiz_results (
+                              id SERIAL PRIMARY KEY,
+                              enrollment_id INT NOT NULL REFERENCES enrollments(id),
+                              quiz_id INT NOT NULL REFERENCES quizzes(id),
+                              score DOUBLE PRECISION NOT NULL,
+                              completed_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
